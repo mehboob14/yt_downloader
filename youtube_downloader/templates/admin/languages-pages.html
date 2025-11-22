@@ -1,0 +1,55 @@
+{% extends 'admin/layout.html' %}
+{% block title %}{{data.name}}{% endblock %}
+{% block header %}
+<style>
+.language-page{
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 40px;
+    border-radius: 14px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+</style>
+{% endblock %}
+{% block main_content %}
+<div class="d-flex flex-wrap justify-content-center" style="gap: 30px;">
+        <a href="/admin/panel/language/{{ data.id }}/edit" class="language-page text-decoration-none text-success">
+            <svg width="70px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M13.228 2.688a2 2 0 0 0-2.456 0l-8.384 6.52C1.636 9.795 2.05 11 3.003 11h1.092l.82 8.199A2 2 0 0 0 6.905 21h10.19a2 2 0 0 0 1.99-1.801l.82-8.199h1.092c.952 0 1.368-1.205.615-1.791l-8.384-6.52ZM12 16a3 3 0 1 0 0-6a3 3 0 0 0 0 6"/></g></svg>
+            <strong>Home</strong>
+        </a>
+    
+        
+        {% for page in pages %}
+            <a href="/admin/panel/language/{{page.id}}/edit-cutom-page" class="language-page text-decoration-none text-success">
+                <svg width="70px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4"><rect width="36" height="36" x="6" y="6" rx="3"/><path stroke-linecap="round" d="M6 17h36M17 42V17"/></g></svg>
+                <strong>{{page.page_name}}</strong>
+            </a>
+        {% endfor %}
+        <a href="/admin/panel/language/{{ data.id }}/add-new-cutom-page" class="language-page text-decoration-none text-success">
+            <svg width="70px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="currentColor" d="M3 5.5A2.5 2.5 0 0 1 5.5 3H8v2.5A1.5 1.5 0 0 0 9.5 7H17v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 3 14.5zM8 11a1 1 0 1 0-2 0a1 1 0 0 0 2 0m2 1a1 1 0 1 0 0-2a1 1 0 0 0 0 2m4-1a1 1 0 1 0-2 0a1 1 0 0 0 2 0m3-5v-.5A2.5 2.5 0 0 0 14.5 3H9v2.5a.5.5 0 0 0 .5.5z"/></svg>
+            <strong>Create New</strong>
+        </a>
+</div>
+
+
+
+
+
+{% endblock %}
+{% block footer %}
+<script>
+    const container = document.getElementById('content-container');
+    const direction = '{{ data.dir }}';
+
+    if (direction === 'rrtl') {
+        container.style.direction = 'rtl';
+        container.style.textAlign = 'right';
+    } else {
+        container.style.direction = 'ltr';
+        container.style.textAlign = 'left';
+    }
+</script>
+{% endblock %}

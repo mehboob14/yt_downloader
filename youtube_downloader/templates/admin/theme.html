@@ -1,0 +1,180 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Theme{% endblock %}
+
+{% block main_content %}
+<div class="page-header">
+  <h3 class="page-title">Theme</h3>
+</div>
+
+<form class="row" method="post" enctype="multipart/form-data" id="editThemeForm">
+    {% csrf_token %}
+    
+    <div class="col-4 mb-2">
+      <label class="control-label" for="bg_light">Background Light Color</label>
+      <input type="color" class="form-control" name="bg_light" value="{{ data.bg_light }}">
+    </div>
+    
+    <div class="col-4 mb-2">
+      <label class="control-label" for="bg_dark">Background Dark Color</label>
+      <input type="color" class="form-control" name="bg_dark" value="{{ data.bg_dark }}">
+    </div>
+    
+    <div class="col-4 mb-2">
+      <label class="control-label" for="text_dark">Text Dark Color</label>
+      <input type="color" class="form-control" name="text_dark" value="{{ data.text_dark }}">
+    </div>
+    
+    <div class="col-4 mb-2">
+      <label class="control-label" for="text_light">Text Light Color</label>
+      <input type="color" class="form-control" name="text_light" value="{{ data.text_light }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="border_light">Border Light Color</label>
+      <input type="color" class="form-control" name="border_light" value="{{ data.border_light }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="border_dark">Border Dark Color</label>
+      <input type="color" class="form-control" name="border_dark" value="{{ data.border_dark }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="toggle_bg">Toggle Background Color</label>
+      <input type="color" class="form-control" name="toggle_bg" value="{{ data.toggle_bg }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="moon_color">Moon Color</label>
+      <input type="color" class="form-control" name="moon_color" value="{{ data.moon_color }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="sun_color">Sun Color</label>
+      <input type="color" class="form-control" name="sun_color" value="{{ data.sun_color }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="dropdown_bg_light">Dropdown Background Light Color</label>
+      <input type="color" class="form-control" name="dropdown_bg_light" value="{{ data.dropdown_bg_light }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="dropdown_bg_dark">Dropdown Background Dark Color</label>
+      <input type="color" class="form-control" name="dropdown_bg_dark" value="{{ data.dropdown_bg_dark }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="dropdown_hover_light">Dropdown Hover Light Color</label>
+      <input type="color" class="form-control" name="dropdown_hover_light" value="{{ data.dropdown_hover_light }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="dropdown_hover_dark">Dropdown Hover Dark Color</label>
+      <input type="color" class="form-control" name="dropdown_hover_dark" value="{{ data.dropdown_hover_dark }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="message_bg_light">Message Background Light Color</label>
+      <input type="color" class="form-control" name="message_bg_light" value="{{ data.message_bg_light }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="message_bg_dark">Message Background Dark Color</label>
+      <input type="color" class="form-control" name="message_bg_dark" value="{{ data.message_bg_dark }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="message_icon">Message Icon Color</label>
+      <input type="color" class="form-control" name="message_icon" value="{{ data.message_icon }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="input_border">Input Border Color</label>
+      <input type="color" class="form-control" name="input_border" value="{{ data.input_border }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="search_bg_light">Search Background Light Color</label>
+      <input type="color" class="form-control" name="search_bg_light" value="{{ data.search_bg_light }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="search_bg_dark">Search Background Dark Color</label>
+      <input type="color" class="form-control" name="search_bg_dark" value="{{ data.search_bg_dark }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="search_button_bg">Search Button Background Color</label>
+      <input type="color" class="form-control" name="search_button_bg" value="{{ data.search_button_bg }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="download_now_button_bg">Download Now Button Background Color</label>
+      <input type="color" class="form-control" name="download_now_button_bg" value="{{ data.download_now_button_bg }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="convert_another_button_bg">Convert Another Button Background Color</label>
+      <input type="color" class="form-control" name="convert_another_button_bg" value="{{ data.convert_another_button_bg }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="follow_us_button_bg">Follow Us Button Background Color</label>
+      <input type="color" class="form-control" name="follow_us_button_bg" value="{{ data.follow_us_button_bg }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="mp3_button_bg">MP3 Button Background Color</label>
+      <input type="color" class="form-control" name="mp3_button_bg" value="{{ data.mp3_button_bg }}">
+    </div>
+
+    <div class="col-4 mb-2">
+      <label class="control-label" for="mp4_button_bg">MP4 Button Background Color</label>
+      <input type="color" class="form-control" name="mp4_button_bg" value="{{ data.mp4_button_bg }}">
+    </div>
+
+    <div class="col-12 mt-3">
+      <button type="submit" class="btn btn-primary">Save Theme</button>
+    </div>
+</form>
+
+{% endblock %}
+
+{% block footer %}
+<script>
+      $(document).ready(function() {
+          $('#editThemeForm').submit(function(e) {
+              e.preventDefault();
+              let formData = new FormData(this);              
+
+              // Submit the form data via AJAX
+              $.ajax({
+                  type: 'POST',
+                  url: '/api/theme',
+                  data: formData,
+                  processData: false,
+                  contentType: false,
+                  beforeSend: function() {
+                      $("#editThemeForm button[type=submit]").prop("disabled", true);
+                  },
+                  success: function(response) {
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 1500);
+                      swal("Done!", response.message, "success");
+                  },
+                  error: function(xhr, status, error) {
+                      swal("Error!", xhr.responseJSON.error, "error");
+                  },
+                  complete: function() {
+                      setTimeout(function() {
+                          $("#editThemeForm button[type=submit]").prop("disabled", false);
+                      }, 1000);
+                  }
+              });
+          });
+      });
+</script>
+{% endblock %}

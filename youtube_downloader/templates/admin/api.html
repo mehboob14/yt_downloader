@@ -1,0 +1,71 @@
+{% extends 'admin/layout.html' %}
+{% block title %}API{% endblock %}
+{% block main_content %}
+<div class="page-header">
+  <h3 class="page-title">API</h3>
+</div>
+<form class="row" method="post" enctype="multipart/form-data" id="editApiForm">
+    {% csrf_token %}
+    <div class="col-12 mb-2">
+      <label class="control-label" for="iframe_url">IFrame URL</label>
+      <input type="text" class="form-control" name="iframe_url" value="{{data.iframe_url}}">
+    </div>
+    <div class="col-12 mb-2">
+      <label class="control-label" for="cobalt_api_url">Cobalt API URL</label>
+      <input type="text" class="form-control" name="cobalt_api_url" value="{{data.cobalt_api_url}}">
+    </div>
+    <div class="col-12 mb-3">
+        <label for="current_use" class="form-label">Use</label>
+        <select class="form-control" name="current_use" id="current_use"  required>
+            <option value="cobalt" {% if data.current_use == 'cobalt' %}selected{% endif %}>Cobalt</option>
+            <option value="iframe" {% if data.current_use == 'iframe' %}selected{% endif %}>IFrame</option>
+        </select>
+    </div>
+    <div class="col-12 mb-2">
+      <label class="control-label" for="direct_ad">Direct Ad</label>
+      <input type="text" class="form-control" name="direct_ad" value="{{data.direct_ad}}">
+    </div>
+    <div class="col-12 mb-2">
+      <label class="control-label" for="social_link">Follow US Link</label>
+      <input type="text" class="form-control" name="social_link" value="{{data.social_link}}">
+    </div>
+    <div class="col-12 mb-2">
+        <button class="btn btn-primary" type="submit">Save Changes</button>
+    </div>
+  </form>
+  {% endblock %}
+  {% block footer %}
+<script>
+      $(document).ready(function() {
+          $('#editApiForm').submit(function(e) {
+              e.preventDefault();
+              let formData = new FormData(this);              
+              // Submit the form data via AJAX
+              $.ajax({
+                  type: 'POST',
+                  url: '/api/settings',
+                  data: formData,
+                  processData: false,
+                  contentType: false,
+                  beforeSend: function() {
+                      $("#editApiForm button[type=submit]").prop("disabled", true);
+                  },
+                  success: function(response) {
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 1500);
+                      swal("Done!", response.message, "success");
+                  },
+                  error: function(xhr, status, error) {
+                      swal("Error!", xhr.responseJSON.error, "error");
+                  },
+                  complete: function() {
+                      setTimeout(function() {
+                          $("#editApiForm button[type=submit]").prop("disabled", false);
+                      }, 1000);
+                  }
+              });
+          });
+      });
+  </script>
+  {% endblock %}

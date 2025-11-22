@@ -1,0 +1,138 @@
+{% extends 'admin/layout.html' %}
+{% block title %}{{data.page_name}}{% endblock %}
+{% block main_content %}
+<div class="d-flex mb-3 justify-content-between">
+    <a href="/admin/panel/language/{{ data.language.id }}/pages" class="btn btn-primary">Back</a>
+    <button class="btn btn-danger" onclick="deletePage({{data.id}})">Delete this Page</button>
+</div>
+
+<form class="row mb-5" method="post" enctype="multipart/form-data" id="editPageForm">
+    {% csrf_token %}
+    <input type="hidden" name="id"  value="{{data.id}}">
+    <div class="col-4 mb-3">
+        <label for="page_name" class="form-label">Page Name</label>
+        <input type="text" class="form-control" name="page_name" value="{{data.page_name}}" placeholder="Enter Page Name" required>
+    </div>
+    <div class="col-8 mb-3">
+        <label for="slug" class="form-label">Slug</label>
+        <input type="text" class="form-control" name="slug" value="{{data.slug}}"  placeholder="Enter Page Slug" required>
+    </div>
+    <div class="col-12 mb-2">
+        <label class="control-label" for="meta_title">Meta Title</label>
+        <input type="text" class="form-control" placeholder="Meta Title" value="{{data.meta_title}}"  name="meta_title" required>
+    </div>
+    <div class="col-12 mb-2">
+        <label class="control-label" for="meta_description">Meta Description</label>
+        <input type="text" class="form-control" value="{{data.meta_description}}"  placeholder="Meta Description" name="meta_description"  required>
+    </div>
+    <div class="col-12 mb-2">
+        <label class="control-label" for="name">Header(Meta Tags)</label>
+        <textarea id="header" name="header" class="form-control" placeholder="Meta Tags" style="height: 250px;">{{data.header|safe}}</textarea>
+    </div>    
+    
+    <div class="col-12 mb-3">
+        <label for="content" class="form-label">Page Content</label>
+        <textarea class="form-control" name="content" id="content" rows="4" placeholder="Enter Page Content" required>{{data.content|safe}}</textarea>
+    </div>
+    <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </div>
+</form>
+
+{% endblock %}
+{% block footer %}
+<script src="/static/ckeditor/ckeditor.js"></script>
+<script>
+$(document).ready(function() {
+   
+    CKEDITOR.replace('content', {
+      filebrowserUploadUrl: '{% url "ckeditor_upload" %}',
+      filebrowserUploadMethod: 'form',
+      height: 400
+    });
+  });
+  
+
+  $(document).ready(function () {
+    $('#editPageForm').submit(function (e) {
+      e.preventDefault()
+      let ContentHtmlContent = CKEDITOR.instances.content.getData()
+      let formData = new FormData(this)
+      formData.set('content', ContentHtmlContent)
+  
+      // Make AJAX request
+      $.ajax({
+        type: 'POST',
+        url: '/api/edit-cutom-page',
+        data: formData,
+        processData: false,
+        contentType: false,
+        beforeSend: function () {
+          $('#editPageForm button[type=submit]').prop('disabled', true)
+          $('#editPageForm button[type=submit]').html(`Saving <div class="spinner-border spinner-border-sm" role="status">
+                      <span class="visually-hidden"></span>
+                    </div>`)
+        },
+        success: function (response) {
+          swal('Done!', response.message, 'success')
+          setTimeout(function () {
+            window.location.reload()
+          }, 1500)
+        },
+        error: function (xhr, status, error) {
+          swal('Error!', xhr.responseJSON.error, 'error')
+        },
+        complete: function () {
+          $('#editPageForm button[type=submit]').html(`Save Changes`)
+          setTimeout(function () {
+            $('#editPageForm button[type=submit]').prop('disabled', false)
+          }, 1000)
+        }
+      })
+    })
+  })
+
+
+
+  function deletePage(pageId) {
+    if (!pageId) {
+        swal('Error!', 'Page ID is missing.', 'error');
+        return;
+    }
+
+    swal({
+        title: 'Are you sure?',
+        text: 'This action will delete the page permanently!',
+        icon: 'warning',
+        buttons: true,
+        dangerMode: true
+    }).then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                type: 'DELETE',
+                url: `/api/delete-custom-page/${pageId}/`,
+                beforeSend: function () {
+                    swal('Deleting...', {
+                        buttons: false,
+                        closeOnClickOutside: false,
+                        icon: 'info'
+                    });
+                },
+                success: function (response) {
+                    swal('Deleted!', response.message || 'Page has been deleted successfully.', 'success');
+                    setTimeout(function () {
+                        window.location.href = `/admin/panel/language/{{data.language.id}}/pages`;
+                    }, 1500);
+                },
+                error: function (xhr) {
+                    const errorMessage = xhr.responseJSON?.error || 'An unexpected error occurred.';
+                    swal('Error!', errorMessage, 'error');
+                }
+            });
+        }
+    });
+}
+
+
+</script>
+{% endblock %}

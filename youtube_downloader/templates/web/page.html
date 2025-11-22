@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="{{current_language.lang}}" dir="{{current_language.dir}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{page_info.meta_title}}</title>
+    <meta name="description" content="{{page_info.meta_description}}">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{page_info.meta_title}}">
+    <meta property="og:description" content="{{page_info.meta_description}}">
+    <meta property="og:url" content="{{ request.global_data.domain }}{{ page_info.slug }}">
+    <meta property="og:locale" content="{{current_language.lang}}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{page_info.meta_title}}">
+    <meta name="twitter:description" content="{{page_info.meta_description}}">
+
+    <link rel="canonical" href="{{ request.global_data.domain }}{{ page_info.slug }}">
+
+    {% if request.global_data.languages|length > 1 %}
+        {% for language in request.global_data.languages %}
+        <link rel="alternate" hreflang="{{ language.lang }}" href="{{ request.global_data.domain }}{{ language.slug }}">
+        {% endfor %}
+        <link rel="alternate" hreflang="x-default" href="{{ request.global_data.domain }}{{ default_langauge.slug }}">
+    {% endif %}
+
+    <link rel="icon" sizes="32x32" href="/static/website/images/favicon-32x32.png">
+
+    {{ page_info.header|safe }}
+    {{ request.global_data.global_header.header|safe }}
+
+    <link rel="stylesheet" href="/static/website/icon/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/website/css/style.css">
+</head>
+
+<body>
+<main>
+
+    <nav class="nav-container">
+        <div class="theme-toggle">
+            <input type="checkbox" class="checkbox" id="checkbox">
+            <label for="checkbox" class="checkbox-label">
+                <i class="fas fa-moon"></i>
+                <i class="fas fa-sun"></i>
+                <span class="ball"></span>
+            </label>
+        </div>
+
+        <a href="{{current_language.slug}}" class="logo-link">
+            <img id="logo" src="/static/website/images/logo.svg" alt="Logo">
+        </a>
+
+        <div class="custom-dropdown">
+            <button class="custom-dropdown-button" onclick="toggleDropdown()">
+                {{page_info.name}}
+                <span class="arrow"></span>
+            </button>
+            <div class="custom-dropdown-content" id="dropdownContent">
+                {% for language in request.global_data.languages %}
+                <a href="{{language.slug}}">{{language.name}}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <h1>{{page_info.heading}}</h1>
+        <p class="tag-line">{{page_info.tag_line}}</p>
+    </header>
+
+    <section class="messages">
+        <div class="message">
+            <span class="icon-star"></span>
+            {{page_info.message_one|safe}}
+        </div>
+
+        <div class="message">
+            <span class="icon-star"></span>
+            {{page_info.message_two|safe}}
+        </div>
+    </section>
+
+    {{page_info.banner_ad_one|safe}}
+
+    <form class="download-form" method="post">
+        {% csrf_token %}
+        <input type="text" name="query" placeholder="{{page_info.placeholder}}" required>
+        <button type="submit">
+            {{page_info.form_button_text}}
+            <i class="fa-solid fa-arrows-rotate"></i>
+        </button>
+    </form>
+
+    {{page_info.banner_ad_two|safe}}
+
+    <div id="searchResults"></div>
+
+    <div class="page-content">
+        <time class="updated">Last updated: {{ current_time }}</time>
+        {{ page_info.content|safe }}
+    </div>
+
+    <footer class="footer">
+        <p>&copy; {% now "Y" %} {{ request.global_data.domain_name }} All rights reserved</p>
+        <div class="footer-links">
+            {% for page in other_pages %}
+            <a href="{{page.slug}}">{{page.page_name}}</a>
+            {% endfor %}
+        </div>
+    </footer>
+
+</main>
+
+<script src="/static/website/js/index.js"
+        data-log="{{log_url}}"
+        data-ad="{{direct_ad}}"
+        data-sl="{{social_link}}"></script>
+
+{{ request.global_data.global_footer.footer|safe }}
+
+</body>
+</html>

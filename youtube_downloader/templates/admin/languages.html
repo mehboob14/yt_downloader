@@ -1,0 +1,82 @@
+{% extends 'admin/layout.html' %}
+{% block title %}Languages{% endblock %}
+{% block main_content %}
+<div class="col-lg-12 my-4">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title d-flex justify-content-between align-content-center">Languages <a href="{% url 'add_new_language_page' %}" class="btn btn-primary">Add New Language</a></h4>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Pages</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for language in data %}
+              <tr id="laguage_{{ language.id }}">
+                <td>{{ language.name }}</td>
+                <td>
+                  <span onclick="window.location.href='/admin/panel/language/{{ language.id }}/pages'" class="mdi mdi-open-in-new text-success" style="font-size: 30px;cursor: pointer;"></span>
+                </td>
+                <td>
+                  <span onclick="window.location.href='/admin/panel/language/{{ language.id }}/edit'" class="mdi mdi-square-edit-outline text-warning" style="font-size: 30px;cursor: pointer;"></span>
+                  <span onclick="deleteLanguage({{language.id}})" class="mdi mdi-delete text-danger" style="font-size: 30px;cursor: pointer;margin-left: 10px;"></span>
+                </td>
+              </tr>
+          {% endfor %}
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}
+
+{% block footer %}
+<script>
+  function deleteLanguage(languageId) {
+    if (!languageId) {
+        swal('Error!', 'Page ID is missing.', 'error');
+        return;
+    }
+
+    swal({
+        title: 'Are you sure?',
+        text: 'This action will delete the Lanaguge permanently!',
+        icon: 'warning',
+        buttons: true,
+        dangerMode: true
+    }).then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                type: 'POST',
+                url: `/api/delete-language/${languageId}/`,
+                beforeSend: function () {
+                    swal('Deleting...', {
+                        buttons: false,
+                        closeOnClickOutside: false,
+                        icon: 'info'
+                    });
+                },
+                success: function (response) {
+                    swal('Deleted!', response.message || 'Page has been deleted successfully.', 'success');
+                    setTimeout(function () {
+                        window.location.reload()
+                    }, 1500);
+                },
+                error: function (xhr) {
+                    const errorMessage = xhr.responseJSON?.error || 'An unexpected error occurred.';
+                    swal('Error!', errorMessage, 'error');
+                }
+            });
+        }
+    });
+}
+
+
+</script>
+{% endblock %}

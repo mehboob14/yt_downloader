@@ -1,0 +1,145 @@
+{% extends 'admin/layout.html' %}
+{% block title %}Redirects{% endblock %}
+{% block main_content %}
+<div class="page-header">
+  <h3 class="page-title">Redirects</h3>
+</div>
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Redirect form</h4>
+      <form class="forms-sample" id="redirectForm">
+        {% csrf_token %}
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Redirect from <sup class="text-danger">*</sup> </label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="path" placeholder="/path">
+          </div>
+          <label class="col-sm-2 col-form-label">Redirect to <sup class="text-danger">*</sup> </label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="redirect_url" placeholder="/path or another url">
+          </div>
+          <label class="col-sm-2 col-form-label">Status code <sup class="text-danger">*</sup> </label>
+          <div class="col-sm-10">
+            <select class="form-control" name="http_status_code">
+              <option value="301">301</option>
+              <option value="302">302</option>
+            </select>
+            <button class="btn mt-2 btn-primary" type="submit">Submit</button>
+          </div>
+        </div>
+    </div>
+    </form>
+  </div>
+</div>
+<div class="col-lg-12 my-4">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Redirects</h4>
+      </p>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Sno.</th>
+            <th>from</th>
+            <th>to</th>
+            <th>status code</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for redirect in data %}
+          <tr id="record_{{ redirect.id }}">
+            <td>
+              {{ forloop.counter }}
+            </td>
+            <td>
+              {{ redirect.path }}
+            </td>
+            <td>
+              {{ redirect.redirect_url }}
+            </td>
+            <td>
+              {{ redirect.http_status_code }}
+            </td>
+            <td>
+              <span class="mdi mdi-delete text-danger" onclick="deleteRedirect({{ redirect.id }})" style="font-size: 20px;cursor: pointer;"></span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+
+{% endblock %}
+{% block footer %}
+<script>
+  $(document).ready(function() {
+    $('#redirectForm').submit(function(e) {
+      e.preventDefault();
+      let formData = $(this).serialize();
+      $.ajax({
+        type: 'POST',
+        url: '/api/redirect/create',
+        data: formData,
+        beforeSend: function() {
+          $("#redirectForm button[type=submit]").prop("disabled", true);
+        },
+        success: function(response) {
+          swal("Done!", "Redirect created successfully", "success")
+          setTimeout(() => {
+            window.location.reload()
+          }, 1000)
+        },
+        error: function(xhr, status, error) {
+          swal("Error!", xhr.responseJSON.error, "error")
+        },
+        complete: function() {
+          setTimeout(function() {
+            $("#redirectForm button[type=submit]").prop("disabled", false);
+          }, 1000)
+        }
+      });
+    });
+  });
+
+  function deleteRedirect(record){
+    swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this redirect!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                type: 'POST',
+                url: '/api/redirect/delete',
+                data: {
+                    id:record
+                },
+                beforeSend: function() {
+                  $(`#record_${record} span`).prop("disabled", true);
+                },
+                success: function(response) {
+                    $(`#record_${record}`).fadeOut(1000)
+                },
+                error: function(xhr, status, error) {
+                  swal("Error!", xhr.responseJSON.error, "error")
+                },
+                complete: function() {
+                    $(`#record_${record} span`).prop("disabled", false);
+                }
+              });
+        } else {
+          swal("Redirect is safe!");
+        }
+      });
+  }
+</script>
+{% endblock %}

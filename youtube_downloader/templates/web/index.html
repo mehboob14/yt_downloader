@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="{{current_language.lang}}" dir="{{current_language.dir}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:site_name" content="{{page_info.meta_title}}">
+    <meta property="og:locale" content="{{current_language.lang}}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.global_data.domain }}{{ page_info.slug }}">
+    <meta name="twitter:site" content="@iloveabc.com">
+    <meta name="twitter:creator" content="@iloveabc.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ request.global_data.domain }}{{ page_info.slug }}">
+    <link rel="canonical" href="{{ request.global_data.domain }}{{ page_info.slug }}">
+    {% if request.global_data.languages|length > 1 %}{% for language in request.global_data.languages %}<link rel="alternate" hreflang="{{ language.lang }}" href="{{ request.global_data.domain }}{{ language.slug }}" />
+    {% endfor %}<link rel="alternate" hreflang="x-default" href="{{ request.global_data.domain }}{{ default_langauge.slug }}">{% endif %}
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/website/images/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/website/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/static/website/images/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/static/website/images/android-chrome-512x512.png">
+    <link rel="apple-touch-icon" href="/static/website/images/apple-touch-icon.png">
+    <link rel="manifest" href="/static/website/images/site.webmanifest">
+    <link rel="shortcut icon" href="/static/website/images/favicon.ico">
+    <title>{{page_info.meta_title}}</title>
+    <meta name="description" content="{{page_info.meta_description}}" />
+    <meta property="og:title" content="{{page_info.meta_title}}">
+    <meta property="og:description" content="{{page_info.meta_description}}">
+    <meta name="twitter:title" content="{{page_info.meta_title}}">
+    <meta name="twitter:description" content="{{page_info.meta_description}}">
+	{{ page_info.header|safe }}
+    {{ request.global_data.global_header.header|safe }}
+    <link rel="stylesheet" href="/static/website/icon/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/website/css/style.css">
+
+</head>
+
+<body>
+
+    <main>
+        <nav>
+            <div>
+                <input type="checkbox" class="checkbox" id="checkbox">
+                <label for="checkbox" class="checkbox-label">
+                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
+                    <span class="ball"></span>
+                </label>
+            </div>
+            <a href="{{current_language.slug}}"><img id="logo" width="auto" height="auto"  src="/static/website/images/logo.svg" alt="Logo"></a>
+            <div class="custom-dropdown">
+                <button class="custom-dropdown-button" onclick="toggleDropdown()">{{page_info.name}}
+                    <span class="arrow"></span>
+                </button>
+                <div class="custom-dropdown-content" id="dropdownContent">
+                    {% for language in request.global_data.languages %}
+                    <a href="{{language.slug}}">{{language.name}}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </nav>
+        <h1>{{page_info.heading}}</h1>
+        <p class="tag-line">{{page_info.tag_line}}</p>
+        <div class="message">
+            <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1cw4hi4" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="AutoAwesomeIcon">
+                <path d="m19 9 1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25z">
+                </path>
+            </svg>
+            {{page_info.message_one|safe}}
+        </div>
+        <div class="message">
+            <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1cw4hi4" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="AutoAwesomeIcon">
+                <path d="m19 9 1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25z">
+                </path>
+            </svg>
+            {{page_info.message_two|safe}}
+        </div>
+        {{page_info.banner_ad_one|safe}}
+        <form class="download-form" method="post">
+            {% csrf_token %}
+            <input type="text" placeholder="{{page_info.placeholder}}" name="query" required>
+            <button type="submit">{{page_info.form_button_text}} <i class="fa-solid fa-arrows-rotate"></i></button>
+        </form>
+        {{page_info.banner_ad_two|safe}}
+        <div id="searchResults"></div>
+        <div class="page-content"><time style="font-size: 13px;">Last updated: {{ current_time }}</time>{{ page_info.content|safe }}</div>
+        <footer>
+            <p>&copy; {% now "Y" %} {{ request.global_data.domain_name }} - All rights reserved.</p>
+            <div>
+                {% for page in other_pages %}
+                    <a href="{{page.slug}}">{{page.page_name}}</a>
+                {% endfor %}
+            </div>
+        </footer>
+    </main>
+
+    <script data-api-url="{{iframe_url}}" src="/static/website/js/indexframe.js"></script>
+    {{ request.global_data.global_footer.footer|safe }}
+</body>
+
+</html>

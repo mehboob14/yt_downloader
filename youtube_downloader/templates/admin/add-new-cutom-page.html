@@ -1,0 +1,95 @@
+{% extends 'admin/layout.html' %}
+{% block title %}New Page For {{data.name}}{% endblock %}
+{% block main_content %}
+<a href="/admin/panel/language/{{ data.id }}/pages" class="btn btn-primary mb-3">Back</a>
+
+<form class="row mb-5" method="post" enctype="multipart/form-data" id="createNewPageForm">
+    {% csrf_token %}
+    <input type="hidden" name="language" id="language" value="{{data.id}}">
+    <div class="col-4 mb-3">
+        <label for="page_name" class="form-label">Page Name</label>
+        <input type="text" class="form-control" style="text-decoration: {{data.dir}};" name="page_name" placeholder="Enter Page Name" required>
+    </div>
+    <div class="col-8 mb-3">
+        <label for="slug" class="form-label">Slug</label>
+        <input type="text" class="form-control" name="slug" placeholder="Enter Page Slug" required>
+    </div>
+    <div class="col-12 mb-2">
+        <label class="control-label" for="meta_title">Meta Title</label>
+        <input type="text" class="form-control" placeholder="Meta Title" name="meta_title" required>
+    </div>
+    <div class="col-12 mb-2">
+        <label class="control-label" for="meta_description">Meta Description</label>
+        <input type="text" class="form-control" placeholder="Meta Description" name="meta_description"  required>
+    </div>
+    <div class="col-12 mb-2">
+        <label class="control-label" for="name">Header(Meta Tags)</label>
+        <textarea id="header" name="header" class="form-control" placeholder="Meta Tags" style="height: 250px;"></textarea>
+    </div>    
+    
+    <div class="col-12 mb-3">
+        <label for="content" class="form-label">Page Content</label>
+        <textarea class="form-control" name="content" id="content" rows="4" placeholder="Enter Page Content" required></textarea>
+    </div>
+    <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary">Create Page</button>
+    </div>
+</form>
+
+
+
+{% endblock %}
+{% block footer %}
+<script src="/static/ckeditor/ckeditor.js"></script>
+<script>
+$(document).ready(function() {
+   
+    CKEDITOR.replace('content', {
+      filebrowserUploadUrl: '{% url "ckeditor_upload" %}',
+      filebrowserUploadMethod: 'form',
+      height: 400
+    });
+  });
+  
+
+  $(document).ready(function () {
+    $('#createNewPageForm').submit(function (e) {
+      e.preventDefault()
+      let ContentHtmlContent = CKEDITOR.instances.content.getData()
+      let formData = new FormData(this)
+      formData.set('content', ContentHtmlContent)
+  
+      // Make AJAX request
+      $.ajax({
+        type: 'POST',
+        url: '/api/add-new-cutom-page',
+        data: formData,
+        processData: false,
+        contentType: false,
+        beforeSend: function () {
+          $('#createNewPageForm button[type=submit]').prop('disabled', true)
+          $('#createNewPageForm button[type=submit]').html(`Creating <div class="spinner-border spinner-border-sm" role="status">
+                      <span class="visually-hidden"></span>
+                    </div>`)
+        },
+        success: function (response) {
+          swal('Done!', response.message, 'success')
+          setTimeout(function () {
+            window.location.reload()
+          }, 1500)
+        },
+        error: function (xhr, status, error) {
+          swal('Error!', xhr.responseJSON.error, 'error')
+        },
+        complete: function () {
+          $('#createNewPageForm button[type=submit]').html(`Create Page`)
+          setTimeout(function () {
+            $('#createNewPageForm button[type=submit]').prop('disabled', false)
+          }, 1000)
+        }
+      })
+    })
+  })
+
+</script>
+{% endblock %}

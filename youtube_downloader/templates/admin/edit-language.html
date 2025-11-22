@@ -1,0 +1,271 @@
+{% extends 'admin/layout.html' %}
+{% block title %}{{ data.name }} Language{% endblock %}
+{% block main_content %}
+<form class="row mb-5" method="post" enctype="multipart/form-data" id="updateLanguageForm">
+    {% csrf_token %}
+    <input type="hidden" name="id" value="{{ data.id }}">
+
+    <!-- Language Direction -->
+    <div class="col-4 mb-3">
+        <label for="dir" class="form-label">Language Direction</label>
+        <select class="form-control" name="dir" id="dir" onchange="changeDirection(this)" required>
+            <option value="ltr" {% if data.dir == 'ltr' %}selected{% endif %}>Left to Right (LTR)</option>
+            <option value="rtl" {% if data.dir == 'rtl' %}selected{% endif %}>Right to Left (RTL)</option>
+        </select>
+    </div>
+
+    <!-- Language Name -->
+    <div class="col-4 mb-3">
+        <label for="name" class="form-label">Language Name</label>
+        <input type="text" class="form-control" name="name" value="{{ data.name }}" placeholder="Enter Language Name" required>
+    </div>
+
+    <!-- Language Attribute -->
+    <div class="col-4 mb-3">
+        <label for="lang" class="form-label">Language Attribute</label>
+        <input type="text" class="form-control" name="lang" value="{{ data.lang }}" placeholder="Enter Language Attribute (e.g., en, ur, ar)" required>
+    </div>
+
+    <!-- Page Name -->
+    <div class="col-4 mb-3">
+        <label for="page_name" class="form-label">Page Name</label>
+        <input type="text" class="form-control" name="page_name" value="{{ data.page_name }}" placeholder="Enter Page Name" required>
+    </div>
+
+    <!-- Slug -->
+    <div class="col-8 mb-3">
+        <label for="slug" class="form-label">Slug</label>
+        <input type="text" class="form-control" name="slug" value="{{ data.slug }}" placeholder="Enter Slug" required>
+    </div>
+
+    <!-- Meta Title -->
+    <div class="col-12 mb-3">
+        <label for="meta_title" class="form-label">Meta Title</label>
+        <input type="text" class="form-control" name="meta_title" value="{{ data.meta_title }}" placeholder="Enter Meta Title" required>
+    </div>
+
+    <!-- Meta Description -->
+    <div class="col-12 mb-3">
+        <label for="meta_description" class="form-label">Meta Description</label>
+        <input type="text" class="form-control" name="meta_description" value="{{ data.meta_description }}" placeholder="Enter Meta Description" required>
+    </div>
+
+    <div class="col-12 mb-3">
+        <label for="header" class="form-label">Header</label>
+        <textarea class="form-control" name="header" rows="5" placeholder="Enter Header">{{ data.header }}</textarea>
+    </div>
+
+    <!-- Heading -->
+    <div class="col-12 mb-3">
+        <label for="heading" class="form-label">Heading</label>
+        <input type="text" class="form-control" name="heading" value="{{ data.heading }}" placeholder="Enter Heading" required>
+    </div>
+
+    <div class="col-12 mb-3">
+        <label for="tag_line" class="form-label">Tag Line</label>
+        <input type="text" class="form-control" name="tag_line" value="{{ data.tag_line }}" placeholder="Enter Tag Line" required>
+    </div>
+
+    <div class="col-12 mb-3">
+        <label for="message_one" class="form-label">Message One</label>
+        <textarea class="form-control" name="message_one" id="message_one" rows="3" required>{{ data.message_one }}</textarea>
+    </div>
+    <div class="col-12 mb-3">
+        <label for="message_two" class="form-label">Message Two</label>
+        <textarea class="form-control" name="message_two" id="message_two" rows="3" required>{{ data.message_two }}</textarea>
+    </div>
+
+    <div class="col-12 mb-3">
+        <label for="banner_ad_one" class="form-label">Banner Ad One</label>
+        <textarea class="form-control" name="banner_ad_one" rows="5" placeholder="Enter Banner Ad One">{{ data.banner_ad_one }}</textarea>
+    </div>
+
+    <div class="col-12 mb-3">
+        <label for="banner_ad_two" class="form-label">Banner Ad Two</label>
+        <textarea class="form-control" name="banner_ad_two" rows="5" placeholder="Enter Banner Ad Two">{{ data.banner_ad_two }}</textarea>
+    </div>
+
+    <!-- Placeholder -->
+    <div class="col-6 mb-3">
+        <label for="placeholder" class="form-label">Placeholder</label>
+        <input type="text" class="form-control" name="placeholder" value="{{ data.placeholder }}" placeholder="Enter Placeholder Text" required>
+    </div>
+
+    <!-- Form Button Text -->
+    <div class="col-6 mb-3">
+        <label for="form_button_text" class="form-label">Form Button Text</label>
+        <input type="text" class="form-control" name="form_button_text" value="{{ data.form_button_text }}" placeholder="Enter Button Text" required>
+    </div>
+
+
+    <!-- Content -->
+    <div class="col-12 mb-3">
+        <label for="content" class="form-label">Content</label>
+        <textarea class="form-control" name="content" id="content" rows="4" placeholder="Enter Content">{{ data.content }}</textarea>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-lg-12 my-4">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Redirects</h4>
+            </p>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Sno.</th>
+                  <th>slug</th>
+                  <th>status code</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for redirect in redirects %}
+                <tr id="record_{{ redirect.id }}">
+                  <td>
+                    {{ forloop.counter }}
+                  </td>
+                  <td>
+                    {{ redirect.old_slug }}
+                  </td>
+                  <td>301</td>
+                  <td>
+                    <span class="mdi mdi-delete text-danger" onclick="deleteRedirect({{ redirect.id }})" style="font-size: 20px;cursor: pointer;"></span>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+</div>
+
+{% endblock %}
+{% block footer %}
+<script src="/static/ckeditor/ckeditor.js"></script>
+<script>
+$(document).ready(function() {
+    CKEDITOR.replace('content', {
+        filebrowserUploadUrl: '{% url "ckeditor_upload" %}',
+        filebrowserUploadMethod: 'form',
+        height: 500
+    });
+    CKEDITOR.replace('message_one', {
+        filebrowserUploadUrl: '{% url "ckeditor_upload" %}',
+        filebrowserUploadMethod: 'form',
+        height: 100
+      });
+      CKEDITOR.replace('message_two', {
+        filebrowserUploadUrl: '{% url "ckeditor_upload" %}',
+        filebrowserUploadMethod: 'form',
+        height: 100
+      });
+});
+
+function changeDirection(select) {
+    const direction = select.value;
+    const fieldsToUpdate = [
+        'name', 'page_name', 'meta_title', 'meta_description', 'heading', 
+        'banner_ad_one', 'banner_ad_two', 'form_text_one', 'form_text_two', 
+        'placeholder', 'form_button_text', 'content_section_title', 'content_section_heading'
+    ];
+
+    fieldsToUpdate.forEach(fieldName => {
+        const field = document.querySelector(`[name="${fieldName}"]`);
+        if (field) {
+            field.style.direction = direction;
+        }
+    });
+}
+
+$(document).ready(function() {
+    $('#updateLanguageForm').submit(function(e) {
+        e.preventDefault();
+        let contentHtmlContent = CKEDITOR.instances.content.getData();
+        let messageOneHtmlContent = CKEDITOR.instances.message_one.getData();
+        let messageTwoHtmlContent = CKEDITOR.instances.message_two.getData();
+        let formData = new FormData(this);
+        formData.set('content', contentHtmlContent);
+        formData.set('message_one', messageOneHtmlContent);
+        formData.set('message_two', messageTwoHtmlContent);
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/edit-language',
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function() {
+                $("#updateLanguageForm button[type=submit]").prop("disabled", true);
+                $("#updateLanguageForm button[type=submit]").html(`Saving <div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden"></span></div>`);
+            },
+            success: function(response) {
+                swal("Done!", response.message, "success");
+                setTimeout(function() {
+                    window.location.reload()
+                }, 1500);
+            },
+            error: function(xhr, status, error) {
+                swal("Error!", xhr.responseJSON.error, "error");
+            },
+            complete: function() {
+                $("#updateLanguageForm button[type=submit]").html(`Save Changes`);
+                setTimeout(function() {
+                    $("#updateLanguageForm button[type=submit]").prop("disabled", false);
+                }, 1000);
+            }
+        });
+    });
+});
+
+
+
+
+
+
+function deleteRedirect(record){
+    swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this redirect!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                type: 'POST',
+                url: '/api/direct-redirect/delete',
+                data: {
+                    id:record
+                },
+                beforeSend: function() {
+                  $(`#record_${record} span`).prop("disabled", true);
+                },
+                success: function(response) {
+                    $(`#record_${record}`).fadeOut(1000)
+                },
+                error: function(xhr, status, error) {
+                  swal("Error!", xhr.responseJSON.error, "error")
+                },
+                complete: function() {
+                    $(`#record_${record} span`).prop("disabled", false);
+                }
+              });
+        } else {
+          swal("Redirect is safe!");
+        }
+      });
+  }
+
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+
+:root {
+    --bg-light: #ffffff;
+    --bg-dark: #293033;
+    --text-dark: #000000;
+    --text-light: #fffafa;
+    --border-light: #cccccc;
+    --border-dark: #000000;
+    --toggle-bg: #000000;
+    --moon-color: #f1c40f;
+    --sun-color: #f39c12;
+    --dropdown-bg-light: #f9f9f9;
+    --dropdown-bg-dark: #000000;
+    --dropdown-hover-light: #e0e0e0;
+    --dropdown-hover-dark: #000000;
+    --message-bg-light: #edf7ed;
+    --message-bg-dark: #231f1f;
+    --message-icon: #2e7d32;
+    --input-border: #000000;
+    --search-bg-light: #f8f8f8;
+    --search-bg-dark: #000000;
+    --search-button-bg: #e53e3e;
+    --download-now-button-bg: #000000;
+    --convert-another-button-bg: #000000;
+    --follow-us-button-bg: #0062ff;
+    --mp3-button-bg: #e53e3e;
+    --mp4-button-bg: #21c421;
+}
+                

@@ -1,0 +1,59 @@
+{% extends 'admin/layout.html' %}
+{% block title %}Footer - Global{% endblock %}
+{% block header %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/theme/dracula.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/htmlmixed/htmlmixed.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/addon/format/format.min.js"></script>
+{% endblock %}
+{% block main_content %}
+<div class="page-header">
+    <h3 class="page-title">Footer - Global</h3>
+</div>
+<form class="forms-sample" id="golbalFooterForm">
+    {% csrf_token %}
+    <textarea name="content" id="code" class="form-control">{{ content }}</textarea>
+  <button class="btn mt-1 btn-primary" type="submit">Save Changes</button>
+</form>
+{% endblock %}
+{% block footer %}
+<script>
+    let textarea = document.getElementById("code");
+    let myCodeMirror = CodeMirror.fromTextArea(textarea, {
+        lineNumbers: true,
+        mode: "html",
+        theme: "dracula"
+    });
+    myCodeMirror.setSize("100%", 500);
+
+    $(document).ready(function() {
+        $('#golbalFooterForm').submit(function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            $.ajax({
+                type: 'POST',
+                url: '/api/global-footer/update',
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $("#golbalFooterForm button[type=submit]").prop("disabled", true);
+                },
+                success: function(response) {
+                    swal("Done!", response.message, "success");
+                },
+                error: function(xhr, status, error) {
+                    swal("Error!", xhr.responseJSON.error, "error");
+                },
+                complete: function () {
+                    setTimeout(function () {
+                        $("#golbalFooterForm button[type=submit]").prop("disabled", false);
+                    }, 1000);
+                }
+            });
+        });
+    });
+      
+</script>
+{% endblock %}

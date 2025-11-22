@@ -1,0 +1,211 @@
+{% extends 'admin/layout.html' %}
+{% block title %}Add New Language{% endblock %}
+{% block main_content %}
+<form class="row mb-5" method="post" enctype="multipart/form-data" id="createNewLanguageForm">
+    {% csrf_token %}
+
+    <!-- Language Direction -->
+    <div class="col-4 mb-3">
+        <label for="dir" class="form-label">Language Direction</label>
+        <select class="form-control" name="dir" id="dir" onchange="changeDirection(this)" required>
+            <option value="ltr">Left to Right (LTR)</option>
+            <option value="rtl">Right to Left (RTL)</option>
+        </select>
+    </div>
+
+    <!-- Language Name -->
+    <div class="col-4 mb-3">
+        <label for="name" class="form-label">Language Name</label>
+        <input type="text" class="form-control" name="name" placeholder="Enter Language Name" required>
+    </div>
+
+    <!-- Language Attribute -->
+    <div class="col-4 mb-3">
+        <label for="lang" class="form-label">Language Attribute</label>
+        <input type="text" class="form-control" name="lang" placeholder="Enter Language Attribute (e.g., en, ur, ar)" required>
+    </div>
+
+    <!-- Page Name -->
+    <div class="col-4 mb-3">
+        <label for="page_name" class="form-label">Page Name</label>
+        <input type="text" class="form-control" name="page_name" placeholder="Enter Page Name" required>
+    </div>
+
+    <!-- Slug -->
+    <div class="col-8 mb-3">
+        <label for="slug" class="form-label">Slug</label>
+        <input type="text" class="form-control" name="slug" placeholder="Enter Slug" required>
+    </div>
+
+    <!-- Meta Title -->
+    <div class="col-12 mb-3">
+        <label for="meta_title" class="form-label">Meta Title</label>
+        <input type="text" class="form-control" name="meta_title" placeholder="Enter Meta Title" required>
+    </div>
+
+    <!-- Meta Description -->
+    <div class="col-12 mb-3">
+        <label for="meta_description" class="form-label">Meta Description</label>
+        <input type="text" class="form-control" name="meta_description" placeholder="Enter Meta Description" required>
+    </div>
+    
+    <div class="col-12 mb-3">
+        <label for="header" class="form-label">Header</label>
+        <textarea class="form-control" name="header" rows="5" placeholder="Enter Header" ></textarea>
+    </div>
+
+    <!-- Heading -->
+    <div class="col-12 mb-3">
+        <label for="heading" class="form-label">Heading</label>
+        <input type="text" class="form-control" name="heading" placeholder="Enter Heading" required>
+    </div>
+
+    <div class="col-12 mb-3">
+        <label for="tag_line" class="form-label">Tag Line</label>
+        <input type="text" class="form-control" name="tag_line" placeholder="Enter Tag Line" required>
+    </div>
+    <div class="col-12 mb-3">
+        <label for="message_one" class="form-label">Message One</label>
+        <textarea class="form-control" name="message_one" id="message_one" rows="3" required></textarea>
+    </div>
+    <div class="col-12 mb-3">
+        <label for="message_two" class="form-label">Message Two</label>
+        <textarea class="form-control" name="message_two" id="message_two" rows="3" required></textarea>
+    </div>
+   
+    <div class="col-12 mb-3">
+        <label for="banner_ad_one" class="form-label">Banner Ad One</label>
+        <textarea class="form-control" name="banner_ad_one" rows="5" placeholder="Enter Banner Ad One" ></textarea>
+    </div>
+    <div class="col-12 mb-3">
+        <label for="banner_ad_two" class="form-label">Banner Ad Two</label>
+        <textarea class="form-control" name="banner_ad_two" rows="5" placeholder="Enter Banner Ad Two" rquired></textarea>
+    </div>
+    
+
+    <!-- Placeholder -->
+    <div class="col-6 mb-3">
+        <label for="placeholder" class="form-label">Placeholder</label>
+        <input type="text" class="form-control" name="placeholder" placeholder="Enter Placeholder Text" required>
+    </div>
+
+    <!-- Form Button Text -->
+    <div class="col-6 mb-3">
+        <label for="form_button_text" class="form-label">Form Button Text</label>
+        <input type="text" class="form-control" name="form_button_text" placeholder="Enter Button Text" required>
+    </div>
+
+    <!-- Content -->
+    <div class="col-12 mb-3">
+        <label for="content" class="form-label">Content</label>
+        <textarea class="form-control" name="content" id="content" rows="4" placeholder="Enter Content" required></textarea>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Create Language</button>
+    </div>
+</form>
+
+
+
+{% endblock %}
+{% block footer %}
+<script src="/static/ckeditor/ckeditor.js"></script>
+<script>
+$(document).ready(function() {
+   
+    CKEDITOR.replace('content', {
+      filebrowserUploadUrl: '{% url "ckeditor_upload" %}',
+      filebrowserUploadMethod: 'form',
+      height: 500
+    });
+
+    CKEDITOR.replace('message_one', {
+      filebrowserUploadUrl: '{% url "ckeditor_upload" %}',
+      filebrowserUploadMethod: 'form',
+      height: 100
+    });
+    CKEDITOR.replace('message_two', {
+      filebrowserUploadUrl: '{% url "ckeditor_upload" %}',
+      filebrowserUploadMethod: 'form',
+      height: 100
+    });
+  });
+ 
+
+  function changeDirection(select) {
+    const direction = select.value;
+    
+    const fieldsToUpdate = [
+        'name', 
+        'page_name', 
+        'meta_title', 
+        'meta_description', 
+        'heading', 
+        'tag_line', 
+        'banner_ad_one', 
+        'banner_ad_two', 
+        'placeholder', 
+        'form_button_text', 
+    ];
+    
+    fieldsToUpdate.forEach(fieldName => {
+        const field = document.querySelector(`[name="${fieldName}"]`);
+        if (field) {
+            field.style.direction = direction;
+        }
+    });
+}
+
+
+
+
+
+    $(document).ready(function() {
+        $('#createNewLanguageForm').submit(function(e) {
+          e.preventDefault();
+          let contentHtmlContent = CKEDITOR.instances.content.getData();
+          let messageOneHtmlContent = CKEDITOR.instances.message_one.getData();
+          let messageTwoHtmlContent = CKEDITOR.instances.message_two.getData();
+          let formData = new FormData(this);
+          formData.set('content', contentHtmlContent);
+          formData.set('message_one', messageOneHtmlContent);
+          formData.set('message_two', messageTwoHtmlContent);
+    
+          // Make AJAX request
+          $.ajax({
+            type: 'POST',
+            url: '/api/create-new-langauge',
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function() {
+              $("#createNewLanguageForm button[type=submit]").prop("disabled", true);
+              $("#createNewLanguageForm button[type=submit]").html(`Creating New Language <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="visually-hidden"></span>
+                  </div>`);
+            },
+            success: function(response) {
+              swal("Done!", response.message, "success");
+              setTimeout(function() {
+                window.location.reload()
+              }, 1500);
+            },
+            error: function(xhr, status, error) {
+              swal("Error!", xhr.responseJSON.error, "error");
+            },
+            complete: function() {
+              $("#createNewLanguageForm button[type=submit]").html(`Create Language`);
+              setTimeout(function() {
+                $("#createNewLanguageForm button[type=submit]").prop("disabled", false);
+              }, 1000);
+            }
+          });
+        });
+    
+      });
+
+
+</script>
+{% endblock %}

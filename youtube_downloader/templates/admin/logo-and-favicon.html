@@ -1,0 +1,84 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Logo & Favicon{% endblock %}
+
+{% block main_content %}
+<div class="page-header">
+  <h3 class="page-title">Logo & Favicon</h3>
+</div>
+
+<form class="row" method="post" enctype="multipart/form-data" id="editLogoAndFaviconForm">
+    {% csrf_token %}
+    
+    <div class="col-6 mb-2">
+        <label class="control-label" for="logo_light">Logo Light (SVG) 160 x 40 px</label>
+        <input type="file" class="form-control" name="logo_light" accept=".svg" required>
+    </div>
+    
+    <div class="col-6 mb-2">
+        <label class="control-label" for="logo_dark">Logo Dark (SVG) 160 x 40 px</label>
+        <input type="file" class="form-control" name="logo_dark" accept=".svg" required>
+    </div>
+    
+    <div class="col-6 mb-2">
+        <label class="control-label" for="favicon_16">Favicon 16x16 (PNG)</label>
+        <input type="file" class="form-control" name="favicon_16" accept=".png" required>
+    </div>
+    
+    <div class="col-6 mb-2">
+        <label class="control-label" for="favicon_32">Favicon 32x32 (PNG)</label>
+        <input type="file" class="form-control" name="favicon_32" accept=".png" required>
+    </div>
+
+    <div class="col-6 mb-2">
+        <label class="control-label" for="favicon_192">Favicon 192x192 (PNG)</label>
+        <input type="file" class="form-control" name="favicon_192" accept=".png" required>
+    </div>
+    
+    <div class="col-6 mb-2">
+        <label class="control-label" for="favicon_512">Favicon 512x512 (PNG)</label>
+        <input type="file" class="form-control" name="favicon_512" accept=".png" required>
+    </div>
+
+    <div class="col-6 mt-3">
+      <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</form>
+
+{% endblock %}
+
+{% block footer %}
+<script>
+    $(document).ready(function() {
+        $('#editLogoAndFaviconForm').submit(function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            
+            $.ajax({
+                type: 'POST',
+                url: '/api/logo-and-favicon',
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function() {
+                    $("#editLogoAndFaviconForm button[type=submit]").prop("disabled", true);
+                },
+                success: function(response) {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                    swal("Done!", response.message, "success");
+                },
+                error: function(xhr, status, error) {
+                    swal("Error!", xhr.responseJSON.error, "error");
+                },
+                complete: function() {
+                    setTimeout(function() {
+                        $("#editLogoAndFaviconForm button[type=submit]").prop("disabled", false);
+                    }, 1000);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
